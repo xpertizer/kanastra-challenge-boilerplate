@@ -8,7 +8,7 @@
     "tailwindcss": "tailwindcss -i ./src/global.css -o ./dist/index.css",
     "build": "tsc && vite build && bun run tailwindcss",
     "preview": "vite preview",
-    "dev:node": "concurrently \"tailwindcss -i ./src/global.css -o ./dist/index.css --watch\" \"vite\"",
+    "dev:node": "concurrently \"npx tailwindcss -i ./src/global.css -o ./dist/index.css --watch\" \"vite\"",
     "build:node": "tsc && vite build && npm run tailwindcss"
   },
   "dependencies": {
