@@ -45,8 +45,6 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-![image](https://github.com/Kanastra-Tech/kanastra-challenge-boilerplate/assets/39869298/c6b0185b-89ec-4f59-85cc-779d30159ed6)
-
 ### Built With
 
 * [React](https://reactjs.org/)
