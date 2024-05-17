@@ -6,15 +6,17 @@
     "dev": "concurrently --kill-others \"bun run tailwindcss --watch\" \"vite\"",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "tailwindcss": "tailwindcss -i ./src/global.css -o ./dist/index.css",
-    "build": "tsc && vite build && bun run tailwindcss",
+    "buildold": "tsc && vite build && bun run tailwindcss",
+    "build": "tsc && vite build && npx tailwindcss build",
     "preview": "vite preview",
     "dev:node": "concurrently \"npx tailwindcss -i ./src/global.css -o ./dist/index.css --watch\" \"vite\"",
     "build:node": "tsc && vite build && npm run tailwindcss"
   },
   "dependencies": {
     "autoprefixer": "^10.4.16",
+    "axios": "^1.6.8",
     "class-variance-authority": "^0.7.0",
-    "clsx": "^2.0.0",
+    "clsx": "^2.1.1",
     "concurrently": "^8.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -32,8 +34,8 @@
     "eslint": "^8.38.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.3.4",
-    "tailwindcss": "^3.3.3",
-    "typescript": "^5.0.2",
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5.4.5",
     "vite": "^4.3.2"
   }
 }

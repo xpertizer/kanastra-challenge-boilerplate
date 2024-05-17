@@ -1,6 +1,11 @@
-import { ReactNode, createContext, useContext, useReducer } from "react";
+import { ReactNode, createContext, useContext, useEffect, useReducer } from "react";
 
-enum FileActionType { }
+
+enum FileActionType {
+  SET_FILE = 'SET_FILE',
+  SET_FILE_LIST = 'SET_FILE_LIST',
+  SET_IS_LOADING = 'SET_IS_LOADING',
+}
 
 type ReducerAction<T, P> = {
   type: T;
@@ -30,6 +35,7 @@ type FileProviderProps = { children: ReactNode };
 
 export const FileContextInitialValues: Partial<FileContextState> = {
   file: {} as File,
+  fileList: [],
   isLoading: false,
 };
 
@@ -40,17 +46,44 @@ const FileReducer = (
   action: FileAction,
 ): FileContextState => {
   switch (action.type) {
+    case FileActionType.SET_FILE: {
+      return {
+        ...state,
+        file: action.payload?.file as File,
+      };
+    }
+    case FileActionType.SET_FILE_LIST: {
+      const fileList = action.payload?.fileList || [];
+      if (state.file && !fileList.includes(state.file)) {
+        fileList.push(state.file);
+      }
+    
+      return {
+        ...state,
+        fileList,
+        isLoading: false,
+      };
+    }
+    
+    case FileActionType.SET_IS_LOADING: {
+      return {
+        ...state,
+        isLoading: action.payload?.isLoading as boolean,
+      };
+    }
     default: {
-      throw new Error(`Unhandled action type: ${action.type}`);
+      throw new Error(`Action not regonized: ${action.type}`);
     }
   }
 };
-
 const FileProvider = ({ children }: FileProviderProps) => {
   const [state, dispatch] = useReducer(
     FileReducer,
-    FileContextInitialValues as FileContextState,
+    { ...loadState(), ...FileContextInitialValues } as FileContextState,
   );
+  useEffect(() => {
+    saveState(state); 
+  }, [state]);
 
   return (
     <FileContext.Provider value={{ state, dispatch }}>
@@ -66,5 +99,43 @@ const useFileContext = () => {
     throw new Error("useFileContext must be used within a FileProvider");
 
   return context;
+}
+
+const serializableFileList = (state: FileContextState) => state.fileList.map(file => ({
+  name: file.name,
+  size: file.size,
+  type: file.type,
+}));
+
+const loadState = () => {
+  try {
+    const serializedFileList = localStorage.getItem('fileList');
+    if (serializedFileList === null) {
+      return undefined;
+    }
+    return { fileList: JSON.parse(serializedFileList).map((file: File) => new File([file], file.name, { type: file.type })) };
+  } catch (err) {
+      console.log('erro ao carregar filelist' )
+      console.log(err)
+    return undefined;
+  }
 };
 
+const saveState = (state: FileContextState) => {
+  try {
+    const fileList = serializableFileList(state);
+    const serializedFileList = JSON.stringify(fileList);
+    localStorage.setItem('fileList', serializedFileList);
+  } catch (err) {
+      console.log('erro ao salvar filelist' )
+      console.log(err)
+  }
+};
+
+export {
+  FileProvider,
+  useFileContext,
+  FileReducer,
+  FileContext,
+  FileActionType,
+};

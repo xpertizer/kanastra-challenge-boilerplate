@@ -7,6 +7,9 @@ export default defineConfig({
   server: {
     port: 8888
   },
+  build: {
+    outDir: 'dist/build',
+  },
   plugins: [react()],
   resolve: {
     alias: {

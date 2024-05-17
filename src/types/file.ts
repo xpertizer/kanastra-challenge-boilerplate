@@ -1,6 +1,10 @@
 import { ReactNode } from "react";
 
-enum FileActionType {}
+enum FileActionType {
+  SET_FILE = 'SET_FILE',
+  SET_FILE_LIST = 'SET_FILE_LIST',
+  SET_IS_LOADING = 'SET_IS_LOADING',
+}
 
 type ReducerAction<T, P> = {
   type: T;
